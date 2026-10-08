@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Happy Birthday!</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎂</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;1,9..144,500&family=Nunito:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#3b1f4a;--blush:#ffd9e4;--rose:#ff6f9c;--butter:#ffe9a8;--sky:#cfe8ff;--paper:#fff8fb}
+@media (prefers-color-scheme:dark){:root{--ink:#fbeaff;--paper:#24122e;--blush:#4a2340;--butter:#4a4023;--sky:#1f3350}}
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{font-family:Nunito,system-ui,sans-serif;color:var(--ink);background:var(--paper);line-height:1.6;overflow-x:hidden}
+canvas{position:fixed;inset:0;pointer-events:none;z-index:5}
+.blob{position:fixed;border-radius:50%;filter:blur(60px);opacity:.7;z-index:0}
+.b1{width:340px;height:340px;background:var(--blush);top:-80px;left:-80px}
+.b2{width:300px;height:300px;background:var(--sky);bottom:-80px;right:-60px}
+.b3{width:200px;height:200px;background:var(--butter);top:45%;left:60%}
+main{position:relative;z-index:1;max-width:680px;margin:0 auto;padding:0 20px 80px}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:18px}
+.hero small{font-size:1.05rem;opacity:.8}
+h1{font-family:Fraunces,Georgia,serif;font-size:clamp(2.8rem,12vw,5.5rem);line-height:1.05;font-weight:600}
+h1 em{font-style:italic;color:var(--rose)}
+.cake{font-size:4rem;animation:bob 2.4s ease-in-out infinite}
+@keyframes bob{50%{transform:translateY(-10px)}}
+button{font:inherit;font-weight:600;border:0;border-radius:999px;padding:14px 28px;background:var(--rose);color:#fff;cursor:pointer;box-shadow:0 8px 20px rgba(255,111,156,.35);transition:transform .15s}
+button:hover{transform:scale(1.05)}
+button:focus-visible{outline:3px solid var(--ink);outline-offset:3px}
+.hidden{display:none}
+.letter{background:var(--paper);border:2px solid var(--blush);border-radius:24px;padding:32px 28px;margin-bottom:40px;box-shadow:0 10px 30px rgba(0,0,0,.06)}
+.letter h2{font-family:Fraunces,Georgia,serif;font-size:1.7rem;margin-bottom:12px}
+.letter p{margin-bottom:12px;max-width:60ch}
+.sign{font-family:Fraunces,Georgia,serif;font-style:italic;font-size:1.3rem;margin-top:18px}
+h3{font-family:Fraunces,Georgia,serif;font-size:1.4rem;margin:8px 0 14px}
+.wishes{display:grid;gap:14px;margin-bottom:40px}
+.wish{border-radius:18px;padding:16px 20px;cursor:pointer;border:0;text-align:left;width:100%;font-weight:400;color:var(--ink);box-shadow:none}
+.wish:nth-child(1){background:var(--blush)}
+.wish:nth-child(2){background:var(--sky)}
+.wish:nth-child(3){background:var(--butter)}
+.wish b{display:block}
+.wish span{display:none;margin-top:6px}
+.wish.open span{display:block}
+.foot{text-align:center;opacity:.75}
+@media (prefers-reduced-motion:reduce){.cake{animation:none}}
+</style>
+</head>
+<body>
+<div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
+<canvas id="c"></canvas>
+
+<main>
+  <section class="hero" id="hero">
+    <div class="cake" aria-hidden="true">🎂</div>
+    <small id="date"></small>
+    <h1>Happy Birthday,<br><em id="name"></em></h1>
+    <p id="tag"></p>
+    <button id="open">Open your surprise</button>
+  </section>
+
+  <section class="hidden" id="content">
+    <div class="letter">
+      <h2 id="lt"></h2>
+      <div id="body"></div>
+      <p class="sign" id="sign"></p>
+    </div>
+
+    <h3>Three little wishes (tap to open)</h3>
+    <div class="wishes" id="wishes"></div>
+
+    <p class="foot" id="foot"></p>
+    <p class="foot"><button id="again">More confetti</button></p>
+  </section>
+</main>
+
+<script>
+/* ====== EDIT ONLY THIS PART ====== */
+const CFG = {
+  name: "Your Friend",
+  from: "Karan",
+  date: "Today is your day",
+  tagline: "I made you a tiny corner of the internet, just for today.",
+  letterTitle: "A little note for you",
+  message: [
+    "Thank you for being the kind of friend who makes ordinary days feel lighter.",
+    "I hope this year brings you calm mornings, big wins, and plenty of cake.",
+    "You deserve every good thing coming your way."
+  ],
+  wishes: [
+    ["Wish 1: Joy", "May you laugh until your cheeks hurt, every single week."],
+    ["Wish 2: Growth", "May every goal you are working on land exactly on time."],
+    ["Wish 3: Peace", "May you always have people who make you feel at home."]
+  ],
+  footer: "Made with care, just for you."
+};
+/* ================================= */
+
+const $ = id => document.getElementById(id);
+$("name").textContent = CFG.name;
+$("date").textContent = CFG.date;
+$("tag").textContent = CFG.tagline;
+$("lt").textContent = CFG.letterTitle;
+$("sign").textContent = "With love, " + CFG.from;
+$("foot").textContent = CFG.footer;
+document.title = "Happy Birthday, " + CFG.name + "!";
+CFG.message.forEach(t => { const p = document.createElement("p"); p.textContent = t; $("body").appendChild(p); });
+CFG.wishes.forEach(([h, t]) => {
+  const b = document.createElement("button");
+  b.className = "wish";
+  b.innerHTML = "<b></b><span></span>";
+  b.querySelector("b").textContent = h;
+  b.querySelector("span").textContent = t;
+  b.onclick = () => { b.classList.toggle("open"); burst(0.5, 0.6, 40); };
+  $("wishes").appendChild(b);
+});
+
+const cv = $("c"), cx = cv.getContext("2d");
+let parts = [], W, H;
+function size(){ W = cv.width = innerWidth; H = cv.height = innerHeight; }
+addEventListener("resize", size); size();
+const colors = ["#ff6f9c","#ffd54f","#7ec8ff","#b28dff","#6fe3b0"];
+function burst(x, y, n){
+  for(let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2, s = 4 + Math.random()*7;
+    parts.push({x:x*W,y:y*H,vx:Math.cos(a)*s,vy:Math.sin(a)*s-4,r:4+Math.random()*5,c:colors[i%colors.length],life:120});
+  }
+  if(parts.length === n) loop();
+}
+function loop(){
+  cx.clearRect(0,0,W,H);
+  parts = parts.filter(p => p.life > 0);
+  parts.forEach(p => {
+    p.vy += 0.18; p.x += p.vx; p.y += p.vy; p.life--;
+    cx.globalAlpha = Math.min(1, p.life/40);
+    cx.fillStyle = p.c;
+    cx.fillRect(p.x, p.y, p.r, p.r*1.6);
+  });
+  if(parts.length) requestAnimationFrame(loop); else cx.clearRect(0,0,W,H);
+}
+function party(){ burst(0.2,0.4,60); burst(0.8,0.4,60); burst(0.5,0.3,80); }
+
+$("open").onclick = () => {
+  $("hero").classList.add("hidden");
+  $("content").classList.remove("hidden");
+  scrollTo(0,0);
+  party();
+};
+$("again").onclick = party;
+</script>
+</body>
+</html>
